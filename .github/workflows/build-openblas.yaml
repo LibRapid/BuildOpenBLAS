@@ -60,6 +60,7 @@ jobs:
       - name: Push Changes
         run: |
           git add -A
+          git rm --cached OpenBLAS
           git commit -m "Update OpenBLAS on windows-latest
           git push origin master
 
@@ -135,6 +136,7 @@ jobs:
       - name: Push Changes
         run: |
           git add -A
+          git rm --cached OpenBLAS
           git commit -m "Update OpenBLAS on windows-latest
           git push origin master
       
