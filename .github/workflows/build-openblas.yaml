@@ -55,13 +55,19 @@ jobs:
       - name: Install OpenBLAS
         run: |
           cd OpenBLAS
-          make install PREFIX=../openblas_${{ matrix.platform }}
+          make install PREFIX=../openblas-${{ matrix.platform }}
       
+      - name: Push Changes
+        run: |
+          git add -A
+          git commit -m "Update OpenBLAS on windows-latest
+          git push origin master
+
       - name: Archive OpenBLAS Build
         uses: actions/upload-artifact@v3
         with:
           name: OpenBLAS on ${{ matrix.platform }}
-          path: openblas_${{ matrix.platform }}
+          path: openblas-${{ matrix.platform }}
 
   openblas_windows:
     name: Build OpenBLAS on Windows
@@ -124,10 +130,16 @@ jobs:
         run: |
           cd OpenBLAS
           cd build
-          cmake --install . --prefix ../../openblas_${{ matrix.platform }}
+          cmake --install . --prefix ../../openblas-windows-latest
+
+      - name: Push Changes
+        run: |
+          git add -A
+          git commit -m "Update OpenBLAS on windows-latest
+          git push origin master
       
       - name: Archive OpenBLAS Build
         uses: actions/upload-artifact@v3
         with:
           name: OpenBLAS on windows-latest
-          path: openblas_${{ matrix.platform }}
+          path: openblas-windows-latest
