@@ -38,13 +38,6 @@ jobs:
 
       - name: Get latest CMake and ninja
         uses: lukka/get-cmake@latest
-    
-      - name: Clone OpenBLAS
-        run: |
-          git clone https://github.com/xianyi/OpenBLAS.git
-          cd OpenBLAS
-        # git reset --hard 939452ea9dcb57abdcc3f1278c6db668a4690465
-        shell: bash
 
       # Double up the make command. Explained above
       - name: Build OpenBLAS
@@ -59,7 +52,6 @@ jobs:
       
       - name: Push Changes
         run: |
-          git rm --cached OpenBLAS
           git add -A
           git commit -m "Update OpenBLAS on windows-latest
           git push origin master
@@ -102,13 +94,6 @@ jobs:
           conda config --add channels conda-forge --force
           conda config --set auto_update_conda false
           conda install --yes --quiet clangdev cmake ninja flang=11.0.1
-  
-      - name: Clone OpenBLAS
-        run: |
-          git clone https://github.com/xianyi/OpenBLAS.git
-          cd OpenBLAS
-        # git reset --hard 939452ea9dcb57abdcc3f1278c6db668a4690465
-        shell: bash
 
       - name: Configure CMake
         run: |
@@ -135,7 +120,6 @@ jobs:
 
       - name: Push Changes
         run: |
-          git rm --cached OpenBLAS
           git add -A
           git commit -m "Update OpenBLAS on windows-latest
           git push origin master
