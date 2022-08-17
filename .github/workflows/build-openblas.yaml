@@ -39,6 +39,10 @@ jobs:
       - name: Get latest CMake and ninja
         uses: lukka/get-cmake@latest
 
+      - name: Clone OpenBLAS
+        run: |
+          git clone https://github.com/xianyi/OpenBLAS
+
       # Double up the make command. Explained above
       - name: Build OpenBLAS
         run: |
@@ -50,6 +54,10 @@ jobs:
         run: |
           cd OpenBLAS
           make install PREFIX=../openblas-${{ matrix.platform }}
+
+      - name: Remove OpenBLAS
+        run: |
+          rm -rf OpenBLAS
       
       - name: Push Changes
         run: |
@@ -100,6 +108,10 @@ jobs:
           conda config --set auto_update_conda false
           conda install --yes --quiet clangdev cmake ninja flang=11.0.1
 
+      - name: Clone OpenBLAS
+        run: |
+          git clone https://github.com/xianyi/OpenBLAS
+
       - name: Configure CMake
         run: |
           cd OpenBLAS
@@ -123,6 +135,10 @@ jobs:
           cd OpenBLAS
           cd build
           cmake --install . --prefix ../../openblas-windows-latest
+
+      - name: Remove OpenBLAS
+        run: |
+          rd /s /q OpenBLAS
 
       - name: Push Changes
         run: |
