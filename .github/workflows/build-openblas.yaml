@@ -55,9 +55,10 @@ jobs:
           cd OpenBLAS
           make install PREFIX=../openblas-${{ matrix.platform }}
 
-      - name: Remove OpenBLAS
-        run: |
-          rm -rf OpenBLAS
+      - name: Remove OpenBLAS Source
+        uses: JesseTG/rm@v1.0.3
+        with:
+          path: OpenBLAS
       
       - name: Push Changes
         continue-on-error: true
@@ -137,9 +138,10 @@ jobs:
           cd build
           cmake --install . --prefix ../../openblas-windows-latest
 
-      - name: Remove OpenBLAS
-        run: |
-          rm -rf OpenBLAS
+      - name: Remove OpenBLAS Source
+        uses: JesseTG/rm@v1.0.3
+        with:
+          path: OpenBLAS
 
       - name: Push Changes
         continue-on-error: true
