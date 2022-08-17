@@ -55,6 +55,7 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions@users.noreply.github.com"
 
+          git pull
           git add -A
           git commit -m "Update OpenBLAS on ${{ matrix.platform }}"
           git push origin master
@@ -126,6 +127,7 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
+          git pull
           git add -A
           git commit -m "Update OpenBLAS on windows-latest"
           git push origin master
