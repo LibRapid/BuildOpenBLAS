@@ -139,7 +139,7 @@ jobs:
 
       - name: Remove OpenBLAS
         run: |
-          rd /s /q OpenBLAS
+          rm -rf OpenBLAS
 
       - name: Push Changes
         continue-on-error: true
