@@ -60,6 +60,7 @@ jobs:
           rm -rf OpenBLAS
       
       - name: Push Changes
+        continue-on-error: true
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions@users.noreply.github.com"
@@ -141,6 +142,7 @@ jobs:
           rd /s /q OpenBLAS
 
       - name: Push Changes
+        continue-on-error: true
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
