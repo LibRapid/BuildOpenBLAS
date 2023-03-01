@@ -20,7 +20,7 @@ jobs:
         targetplatform: [ x64 ]
 
     steps:
-      - name: Extract branch name
+      - name: Extract Branch Name
         shell: bash
         run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
         id: extract_branch
@@ -39,10 +39,11 @@ jobs:
         with:
           python-version: 3.8
 
-      - name: Get latest CMake and ninja
+      - name: Get Latest CMake and Ninja
         uses: lukka/get-cmake@latest
 
-      - name: Install Conda things
+      - name: Install Conda Packages
+        if: ${{ matrix.platform }} == 'windows-latest'
         run: |
           conda config --add channels conda-forge --force
           conda config --set auto_update_conda false
@@ -60,7 +61,6 @@ jobs:
           cmake .. -G "Ninja" -DCMAKE_MT=mt -DBUILD_SHARED_LIBS=ON -DBUILD_WITHOUT_LAPACK=no -DNOFORTRAN=0 -DNUM_THREADS=256 -DDYNAMIC_ARCH=ON -DDYNAMIC_LIST='CORE2;NEHALEM;SANDYBRIDGE;BULLDOZER;HASWELL' -DTARGET=NEHALEM -DCMAKE_BUILD_TYPE=Release
         shell: pwsh
 
-      # Double up the make command. Explained above
       - name: Build OpenBLAS
         run: |
           cd OpenBLAS
