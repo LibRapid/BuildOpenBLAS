@@ -16,7 +16,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: [ macos-latest, ubuntu-latest ]
+        platform: [ macos-latest, ubuntu-latest, windows-latest ]
         targetplatform: [ x64 ]
 
     steps:
@@ -31,6 +31,9 @@ jobs:
           submodules: recursive
           ref: ${{ steps.extract_branch.outputs.branch }}
 
+      - name: Set Up Miniconda
+        uses: conda-incubator/setup-miniconda@v2.1.1
+
       - name: Set Up Python
         uses: actions/setup-python@v4
         with:
@@ -39,21 +42,36 @@ jobs:
       - name: Get latest CMake and ninja
         uses: lukka/get-cmake@latest
 
+      - name: Install Conda things
+        run: |
+          conda config --add channels conda-forge --force
+          conda config --set auto_update_conda false
+          conda install --yes --quiet clangdev cmake ninja flang=11.0.1
+
       - name: Clone OpenBLAS
         run: |
           git clone https://github.com/xianyi/OpenBLAS
+
+      - name: Configure CMake
+        run: |
+          cd OpenBLAS
+          mkdir build
+          cd build
+          cmake .. -G "Ninja" -DCMAKE_MT=mt -DBUILD_SHARED_LIBS=ON -DBUILD_WITHOUT_LAPACK=no -DNOFORTRAN=0 -DNUM_THREADS=256 -DDYNAMIC_ARCH=ON -DDYNAMIC_LIST='CORE2;NEHALEM;SANDYBRIDGE;BULLDOZER;HASWELL' -DTARGET=NEHALEM -DCMAKE_BUILD_TYPE=Release
+        shell: pwsh
 
       # Double up the make command. Explained above
       - name: Build OpenBLAS
         run: |
           cd OpenBLAS
-          git pull
-          make NUM_THREADS=256 DYNAMIC_ARCH=ON DYNAMIC_LIST='CORE2;NEHALEM;SANDYBRIDGE;BULLDOZER;HASWELL' TARGET=NEHALEM
+          cd build
+          cmake --build . --config Release
       
       - name: Install OpenBLAS
         run: |
           cd OpenBLAS
-          make install PREFIX=../openblas-${{ matrix.platform }}
+          cd build
+          cmake --install . --config Release --prefix ../../openblas-windows-latest
 
       - name: Remove OpenBLAS Source
         uses: JesseTG/rm@v1.0.3
@@ -76,86 +94,3 @@ jobs:
         with:
           name: OpenBLAS on ${{ matrix.platform }}
           path: openblas-${{ matrix.platform }}
-
-  openblas_windows:
-    name: Build OpenBLAS on Windows
-    runs-on: windows-latest
-
-    steps:
-      - name: Extract branch name
-        shell: bash
-        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-        id: extract_branch
-
-      - name: Checkout Code
-        uses: actions/checkout@v3
-        with:
-          submodules: recursive
-          ref: ${{ steps.extract_branch.outputs.branch }}
-
-      - name: Set Up Miniconda
-        uses: conda-incubator/setup-miniconda@v2.1.1
-
-      - name: Set Up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: 3.8
-
-      - name: Set Up Visual Studio shell
-        uses: egor-tensin/vs-shell@v2
-
-      - name: Install Conda things
-        run: |
-          conda config --add channels conda-forge --force
-          conda config --set auto_update_conda false
-          conda install --yes --quiet clangdev cmake ninja flang=11.0.1
-
-      - name: Clone OpenBLAS
-        run: |
-          git clone https://github.com/xianyi/OpenBLAS
-
-      - name: Configure CMake
-        run: |
-          cd OpenBLAS
-          git pull
-          set "LIB=%CONDA_PREFIX%\Library\lib;%LIB%"
-          set "CPATH=%CONDA_PREFIX%\Library\include;%CPATH%"
-          mkdir build
-          cd build
-          cmake .. -G "Ninja" -DCMAKE_CXX_COMPILER=clang-cl -DCMAKE_C_COMPILER=clang-cl -DCMAKE_Fortran_COMPILER=flang -DCMAKE_MT=mt -DBUILD_SHARED_LIBS=ON -DBUILD_WITHOUT_LAPACK=no -DNOFORTRAN=0 -DNUM_THREADS=256 -DDYNAMIC_ARCH=ON -DDYNAMIC_LIST='CORE2;NEHALEM;SANDYBRIDGE;BULLDOZER;HASWELL' -DTARGET=NEHALEM -DCMAKE_BUILD_TYPE=Release
-        shell: pwsh
-
-      - name: Build OpenBLAS
-        run: |
-          cd OpenBLAS
-          cd build
-          cmake --build . --config Release
-        shell: pwsh
-
-      - name: Install OpenBLAS
-        run: |
-          cd OpenBLAS
-          cd build
-          cmake --install . --prefix ../../openblas-windows-latest
-
-      - name: Remove OpenBLAS Source
-        uses: JesseTG/rm@v1.0.3
-        with:
-          path: OpenBLAS
-
-      - name: Push Changes
-        continue-on-error: true
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-          git pull
-          git add -A
-          git commit -m "Update OpenBLAS on windows-latest"
-          git push origin master
-      
-      - name: Archive OpenBLAS Build
-        uses: actions/upload-artifact@v3
-        with:
-          name: OpenBLAS on windows-latest
-          path: openblas-windows-latest
