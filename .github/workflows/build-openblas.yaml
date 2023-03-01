@@ -46,7 +46,7 @@ jobs:
         uses: lukka/get-cmake@latest
 
       - name: Install Conda Packages
-        if: ${{ matrix.platform }} == "windows-latest"
+        if: matrix.platform == "windows-latest"
         run: |
           conda config --add channels conda-forge --force
           conda config --set auto_update_conda false
