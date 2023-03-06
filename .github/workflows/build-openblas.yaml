@@ -200,10 +200,16 @@ jobs:
         run: |
           git clone https://github.com/xianyi/OpenBLAS
 
-      - name: Build OpenBLAS
+      - name: Configure CMake
         run: |
           cd OpenBLAS
           mkdir build
+          cd build
+          cmake .. -G "Ninja" -DCMAKE_MT=mt -DBUILD_SHARED_LIBS=ON -DBUILD_WITHOUT_LAPACK=no -DNOFORTRAN=0 -DNUM_THREADS=256 -DDYNAMIC_ARCH=ON -DDYNAMIC_LIST='CORE2;NEHALEM;SANDYBRIDGE;BULLDOZER;HASWELL' -DTARGET=NEHALEM -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build OpenBLAS
+        run: |
+          cd OpenBLAS
           cd build
           cmake --build . --config Release
       
