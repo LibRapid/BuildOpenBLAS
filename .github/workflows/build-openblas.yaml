@@ -12,15 +12,9 @@ on:
 # - 939452ea9dcb57abdcc3f1278c6db668a4690465 <= Fast and works, but there might be a bug?
 
 jobs:
-  openblas_unix:
-    name: Build OpenBLAS on ${{ matrix.platform }}
-    runs-on: ${{ matrix.platform }}
-
-    strategy:
-      fail-fast: false
-      matrix:
-        platform: [ macos-latest, ubuntu-latest, windows-latest ]
-        targetplatform: [ x64 ]
+  openblas_linux:
+    name: Build OpenBLAS on Linux
+    runs-on: ubuntu-latest
 
     steps:
       - name: Extract Branch Name
@@ -85,6 +79,148 @@ jobs:
         run: |
           cd OpenBLAS
           cd build
+          cmake --install . --config Release --prefix ../../openblas-ubuntu-latest
+
+      - name: Remove OpenBLAS Source
+        uses: JesseTG/rm@v1.0.3
+        with:
+          path: OpenBLAS
+      
+      - name: Push Changes
+        continue-on-error: true
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions@users.noreply.github.com"
+
+          git pull
+          git add -A
+          git commit -m "Update OpenBLAS on Ubuntu"
+          git push origin master
+
+      - name: Archive OpenBLAS Build
+        uses: actions/upload-artifact@v3
+        with:
+          name: OpenBLAS on Ubuntu
+          path: openblas-ubuntu-latest
+
+  openblas_macos:
+    name: Build OpenBLAS on MacOS
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+          ref: ${{ steps.extract_branch.outputs.branch }}
+
+      - name: Set Up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.8
+
+      - name: Get latest CMake and ninja
+        uses: lukka/get-cmake@latest
+
+      - name: Clone OpenBLAS
+        run: |
+          git clone https://github.com/xianyi/OpenBLAS
+
+      # Double up the make command. Explained above
+      - name: Build OpenBLAS
+        run: |
+          cd OpenBLAS
+          git pull
+          export CC=gcc-11
+          export CXX=g++-11
+          make NUM_THREADS=256 DYNAMIC_ARCH=ON DYNAMIC_LIST='CORE2;NEHALEM;SANDYBRIDGE;BULLDOZER;HASWELL' TARGET=NEHALEM
+      
+      - name: Install OpenBLAS
+        run: |
+          cd OpenBLAS
+          make install PREFIX=../openblas-macos-latest
+
+      - name: Remove OpenBLAS Source
+        uses: JesseTG/rm@v1.0.3
+        with:
+          path: OpenBLAS
+      
+      - name: Push Changes
+        continue-on-error: true
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions@users.noreply.github.com"
+
+          git pull
+          git add -A
+          git commit -m "Update OpenBLAS on MacOS"
+          git push origin master
+
+      - name: Archive OpenBLAS Build
+        uses: actions/upload-artifact@v3
+        with:
+          name: OpenBLAS on MacOS
+          path: openblas-macos-latest
+
+  openblas_windows:
+    name: Build OpenBLAS on Windows
+    runs-on: windows-latest
+
+    steps:
+      - name: Extract branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
+
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+          ref: ${{ steps.extract_branch.outputs.branch }}
+
+      - name: Set Up Miniconda
+        uses: conda-incubator/setup-miniconda@v2.1.1
+
+      - name: Set Up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.8
+
+      - name: Get Latest CMake and Ninja
+        uses: lukka/get-cmake@latest
+
+      - name: Install Conda Packages
+        if: matrix.platform == 'windows-latest'
+        run: |
+          conda config --add channels conda-forge --force
+          conda config --set auto_update_conda false
+          conda install --yes --quiet clangdev cmake ninja flang=11.0.1
+
+      - name: Clone OpenBLAS
+        run: |
+          git clone https://github.com/xianyi/OpenBLAS
+
+      - name: Configure CMake
+        if: matrix.platform == 'macos-latest'
+        run: |
+          cd OpenBLAS
+          mkdir build
+          cd build
+          cmake .. -G "Ninja" -DCMAKE_MT=mt -DBUILD_SHARED_LIBS=ON -DBUILD_WITHOUT_LAPACK=no -DNOFORTRAN=0 -DNUM_THREADS=256 -DDYNAMIC_ARCH=ON -DDYNAMIC_LIST='CORE2;NEHALEM;SANDYBRIDGE;BULLDOZER;HASWELL' -DTARGET=NEHALEM -DCMAKE_BUILD_TYPE=Release
+        env:
+          CC: gcc-11
+          CXX: g++-11
+
+      - name: Build OpenBLAS
+        run: |
+          cd OpenBLAS
+          cd build
+          cmake --build . --config Release
+      
+      - name: Install OpenBLAS
+        run: |
+          cd OpenBLAS
+          cd build
           cmake --install . --config Release --prefix ../../openblas-windows-latest
 
       - name: Remove OpenBLAS Source
@@ -106,5 +242,5 @@ jobs:
       - name: Archive OpenBLAS Build
         uses: actions/upload-artifact@v3
         with:
-          name: OpenBLAS on ${{ matrix.platform }}
-          path: openblas-${{ matrix.platform }}
+          name: OpenBLAS on windows-latest
+          path: openblas-windows-latest
