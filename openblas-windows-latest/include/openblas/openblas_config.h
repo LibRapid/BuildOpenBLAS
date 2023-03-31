@@ -30,7 +30,7 @@
 #define OPENBLAS_CLOCAL_BUFFER_SIZE	65536
 #define OPENBLAS_ZLOCAL_BUFFER_SIZE	32768
 #define OPENBLAS_GEMM_MULTITHREAD_THRESHOLD	4
-#define OPENBLAS_VERSION "OpenBLAS 0.3.21.dev"
+#define OPENBLAS_VERSION "OpenBLAS 0.3.22.dev"
 /*This is only for "make install" target.*/
 
 #if defined(OPENBLAS_OS_WINNT) || defined(OPENBLAS_OS_CYGWIN_NT) || defined(OPENBLAS_OS_INTERIX)
