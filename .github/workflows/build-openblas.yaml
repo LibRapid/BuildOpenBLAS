@@ -51,17 +51,6 @@ jobs:
           git clone https://github.com/xianyi/OpenBLAS
 
       - name: Configure CMake
-        if: matrix.platform == 'macos-latest'
-        run: |
-          cd OpenBLAS
-          mkdir build
-          cd build
-          cmake .. -G "Ninja" -DCMAKE_MT=mt -DBUILD_SHARED_LIBS=ON -DBUILD_WITHOUT_LAPACK=no -DNOFORTRAN=0 -DNUM_THREADS=256 -DDYNAMIC_ARCH=ON -DDYNAMIC_LIST='CORE2;NEHALEM;SANDYBRIDGE;BULLDOZER;HASWELL' -DTARGET=NEHALEM -DCMAKE_BUILD_TYPE=Release
-        env:
-          CC: gcc-11
-          CXX: g++-11
-
-      - name: Configure CMake
         if: matrix.platform != 'macos-latest'
         run: |
           cd OpenBLAS
@@ -73,7 +62,7 @@ jobs:
         run: |
           cd OpenBLAS
           cd build
-          cmake --build . --config Release --target install --prefix ../../openblas-${{ matrix.platform }}
+          cmake --build . --config Release
       
       - name: Install OpenBLAS
         run: |
