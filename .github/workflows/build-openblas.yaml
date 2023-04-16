@@ -64,6 +64,11 @@ jobs:
           cd build
           cmake --build . --config Release
       
+      - name: Remove Existing Build
+        uses: JesseTG/rm@v1.0.3
+        with:
+          path: openblas-ubuntu-latest
+
       - name: Install OpenBLAS
         run: |
           cd OpenBLAS
@@ -128,6 +133,11 @@ jobs:
           export CC=gcc-11
           export CXX=g++-11
           make NUM_THREADS=256 BUILD_SHARED_LIBS=ON BUILD_WITHOUT_LAPACK=no NOFORTRAN=0 NUM_THREADS=256 DYNAMIC_ARCH=ON DYNAMIC_LIST='CORE2;NEHALEM;BULLDOZER;HASWELL' TARGET=NEHALEM
+      
+      - name: Remove Existing Build
+        uses: JesseTG/rm@v1.0.3
+        with:
+          path: openblas-macos-latest
       
       - name: Install OpenBLAS
         run: |
@@ -206,6 +216,11 @@ jobs:
           cd build
           cmake --build . --config Release
       
+      - name: Remove Existing Build
+        uses: JesseTG/rm@v1.0.3
+        with:
+          path: openblas-windows-latest
+
       - name: Install OpenBLAS
         run: |
           cd OpenBLAS
