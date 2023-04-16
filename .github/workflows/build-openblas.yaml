@@ -250,23 +250,25 @@ on:
 #           path: openblas-windows-latest
 
 jobs:
-  matrix:
-    include:
-      - os: ubuntu-latest
-        cc: gcc-11
-        cxx: g++-11
-
-      - os: macos-latest
-        cc: gcc-11
-        cxx: g++-11
-
-      - os: windows-latest
-        cc: clang-cl
-        cxx: clang-cl
-
-  build:
+  compile:
     name: Build OpenBLAS on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            cc: gcc-11
+            cxx: g++-11
+
+          - os: macos-latest
+            cc: gcc-11
+            cxx: g++-11
+
+          - os: windows-latest
+            cc: clang-cl
+            cxx: clang-cl
 
     steps:
       - name: Extract branch name
