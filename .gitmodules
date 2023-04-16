@@ -1,5 +1,0 @@
-[submodule "OpenBLAS"] # Jitify module for CUDA JIT compilation
- # Jitify module for CUDA JIT compilation
- # Jitify module for CUDA JIT compilation
-	path = OpenBLAS
-	url = https://github.com/xianyi/OpenBLAS.git
