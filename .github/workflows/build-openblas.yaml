@@ -111,11 +111,13 @@ jobs:
       - name: Get latest CMake and ninja
         uses: lukka/get-cmake@latest
 
+      - name: Setup GNU Fortran
+        uses: modflowpy/install-gfortran-action@v1
+
       - name: Clone OpenBLAS
         run: |
           git clone https://github.com/xianyi/OpenBLAS
 
-      # Double up the make command. Explained above
       - name: Build OpenBLAS
         run: |
           cd OpenBLAS
