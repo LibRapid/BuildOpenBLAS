@@ -118,13 +118,16 @@ jobs:
         run: |
           git clone https://github.com/xianyi/OpenBLAS
 
+      # There is an error in OpenBLAS's make script that causes it to fail when installing
+      # the Sandybridge kernel. FOr now, we will just remove it from the list of supported
+      # architectures. This is a temporary fix until the issue is resolved upstream.
       - name: Build OpenBLAS
         run: |
           cd OpenBLAS
           git pull
           export CC=gcc-11
           export CXX=g++-11
-          make NUM_THREADS=256 BUILD_SHARED_LIBS=ON BUILD_WITHOUT_LAPACK=no NOFORTRAN=0 NUM_THREADS=256 DYNAMIC_ARCH=ON DYNAMIC_LIST='CORE2;NEHALEM;SANDYBRIDGE;BULLDOZER;HASWELL' TARGET=NEHALEM
+          make NUM_THREADS=256 BUILD_SHARED_LIBS=ON BUILD_WITHOUT_LAPACK=no NOFORTRAN=0 NUM_THREADS=256 DYNAMIC_ARCH=ON DYNAMIC_LIST='CORE2;NEHALEM;BULLDOZER;HASWELL' TARGET=NEHALEM
       
       - name: Install OpenBLAS
         run: |
@@ -181,7 +184,6 @@ jobs:
         uses: lukka/get-cmake@latest
 
       - name: Install Conda Packages
-        if: matrix.platform == 'windows-latest'
         run: |
           conda config --add channels conda-forge --force
           conda config --set auto_update_conda false
@@ -223,7 +225,7 @@ jobs:
 
           git pull
           git add -A
-          git commit -m "Update OpenBLAS on ${{ matrix.platform }}"
+          git commit -m "Update OpenBLAS on Windows"
           git push origin master
 
       - name: Archive OpenBLAS Build
