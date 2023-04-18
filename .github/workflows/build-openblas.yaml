@@ -289,6 +289,20 @@ jobs:
           submodules: recursive
           ref: ${{ steps.extract_branch.outputs.branch }}
 
+      - name: Install build dependencies
+        if: matrix.platform == 'windows-latest'
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: CLANG64
+          update: true
+          release: false  # Use pre-installed version
+          install: >-
+            base-devel
+            mingw-w64-clang-x86_64-cc
+            mingw-w64-clang-x86_64-cmake
+            mingw-w64-clang-x86_64-ninja
+            mingw-w64-clang-x86_64-ccache
+
       - name: Set Up Python
         uses: actions/setup-python@v4
         with:
@@ -306,20 +320,6 @@ jobs:
           conda config --add channels conda-forge --force
           conda config --set auto_update_conda false
           conda install --yes --quiet clangdev cmake ninja flang=11.0.1
-
-      - name: Install build dependencies
-        if: matrix.platform == 'windows-latest'
-        uses: msys2/setup-msys2@v2
-        with:
-          msystem: CLANG64
-          update: true
-          release: false  # Use pre-installed version
-          install: >-
-            base-devel
-            mingw-w64-clang-x86_64-cc
-            mingw-w64-clang-x86_64-cmake
-            mingw-w64-clang-x86_64-ninja
-            mingw-w64-clang-x86_64-ccache
 
       - name: Add Clang to PATH
         if: matrix.platform == 'windows-latest'
