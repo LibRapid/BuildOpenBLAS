@@ -251,24 +251,24 @@ on:
 
 jobs:
   compile:
-    name: Build OpenBLAS on ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
+    name: Build OpenBLAS on ${{ matrix.platform }}
+    runs-on: ${{ matrix.platform }}
     
     strategy:
       fail-fast: false
       matrix:
         include:
-          - os: ubuntu-latest
+          - platform: ubuntu-latest
             cc: gcc-11
             cxx: g++-11
             shell: bash
 
-          - os: macos-latest
+          - platform: macos-latest
             cc: gcc-11
             cxx: g++-11
             shell: bash
 
-          - os: windows-latest
+          - platform: windows-latest
             cc: clang
             cxx: clang++
             shell: msys2 {0}
@@ -402,7 +402,7 @@ jobs:
         run: |
           cd OpenBLAS
           cd build
-          cmake --install . --config Release --prefix ../../openblas-${{ matrix.os }}
+          cmake --install . --config Release --prefix ../../openblas-${{ matrix.platform }}
         env:
           CC: ${{ matrix.cc }}
           CXX: ${{ matrix.cxx }}
