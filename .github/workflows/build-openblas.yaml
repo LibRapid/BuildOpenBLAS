@@ -267,8 +267,8 @@ jobs:
             cxx: g++-11
 
           - os: windows-latest
-            cc:
-            cxx: 
+            cc: clang
+            cxx: clang++
 
     steps:
       - name: Extract branch name
@@ -300,6 +300,25 @@ jobs:
           conda config --set auto_update_conda false
           conda install --yes --quiet clangdev cmake ninja flang=11.0.1
 
+      - name: Install build dependencies
+        if: matrix.platform == 'windows-latest'
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: CLANG64
+          update: true
+          release: false  # Use pre-installed version
+          install: >-
+            base-devel
+            mingw-w64-clang-x86_64-cc
+            mingw-w64-clang-x86_64-cmake
+            mingw-w64-clang-x86_64-ninja
+            mingw-w64-clang-x86_64-ccache
+
+      - name: Add Clang to PATH
+        if: matrix.platform == 'windows-latest'
+        run: |
+          echo "C:\msys64\clang64\bin" >> $GITHUB_PATH
+
       - name: Clone OpenBLAS
         run: |
           git clone https://github.com/xianyi/OpenBLAS
@@ -309,7 +328,7 @@ jobs:
           cd OpenBLAS
           mkdir build
           cd build
-          cmake .. -DCMAKE_MT=mt -DBUILD_SHARED_LIBS=ON -DBUILD_WITHOUT_LAPACK=no -DNOFORTRAN=1 -DNUM_THREADS=256 -DDYNAMIC_ARCH=ON -DDYNAMIC_LIST='CORE2;NEHALEM;SANDYBRIDGE;BULLDOZER;HASWELL' -DTARGET=NEHALEM -DCMAKE_BUILD_TYPE=Release
+          cmake .. -DCMAKE_MT=mt -DBUILD_SHARED_LIBS=ON -DBUILD_WITHOUT_LAPACK=no -DNOFORTRAN=1 -DBINARY=64 -DINTERFACE64=1 -DNUM_THREADS=256 -DDYNAMIC_ARCH=ON -DDYNAMIC_LIST='CORE2;NEHALEM;SANDYBRIDGE;BULLDOZER;HASWELL' -DTARGET=NEHALEM -DCMAKE_BUILD_TYPE=Release
         env:
           CC: ${{ matrix.cc }}
           CXX: ${{ matrix.cxx }}
