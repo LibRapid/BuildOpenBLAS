@@ -1,0 +1,35 @@
+name: Update OpenBLAS
+
+on:
+  schedule:
+    - cron: "0 10 1/5 * *"
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+# Update the OpenBLAS submodule version and commit the changes.
+
+jobs:
+  update-openblas:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - name: Update OpenBLAS
+        continue-on-error: true
+        run: |
+          git submodule update --init --recursive
+
+      - name: Push Changes
+        needs: update-openblas
+        continue-on-error: true
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions@users.noreply.github.com"
+          git pull
+          git add -A
+          git commit -m "Update OpenBLAS on Ubuntu"
+          git push origin master

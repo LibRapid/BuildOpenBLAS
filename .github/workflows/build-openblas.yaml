@@ -319,10 +319,6 @@ jobs:
         run: |
           echo "C:\msys64\clang64\bin" >> $GITHUB_PATH
 
-      - name: Clone OpenBLAS
-        run: |
-          git clone https://github.com/xianyi/OpenBLAS
-
       - name: Configure CMake
         run: |
           cd OpenBLAS
@@ -360,6 +356,7 @@ jobs:
           git add -A
           git commit -m "Update OpenBLAS on Ubuntu"
           git push origin master
+          
       - name: Archive OpenBLAS Build
         uses: actions/upload-artifact@v3
         with:
