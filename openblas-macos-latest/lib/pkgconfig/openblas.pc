@@ -1,13 +1,11 @@
-libdir=../openblas-macos-latest/lib
+libdir=/usr/local/lib
 libsuffix=
-includedir=../openblas-macos-latest/include
-openblas_config= USE_64BITINT= DYNAMIC_ARCH= DYNAMIC_OLDER= NO_CBLAS= NO_LAPACK= NO_LAPACKE= NO_AFFINITY=1 USE_OPENMP= NEHALEM MAX_THREADS=3
-version=0.3.21.dev
-extralib=-lpthread -lpthread
-Name: openblas
+includedir=/usr/local/include/openblas
+
+openblas_config=USE_64BITINT= NO_CBLAS= NO_LAPACK= NO_LAPACKE= DYNAMIC_ARCH=ON DYNAMIC_OLDER=OFF NO_AFFINITY=1 USE_OPENMP= NEHALEM MAX_THREADS=256 
+Name: OpenBLAS
 Description: OpenBLAS is an optimized BLAS library based on GotoBLAS2 1.13 BSD version
-Version: ${version}
+Version: 
 URL: https://github.com/xianyi/OpenBLAS
-Libs: -L${libdir} -lopenblas${libsuffix}
-Libs.private: ${extralib}
+Libs:  -L${libdir} -lopenblas${libsuffix} 
 Cflags: -I${includedir}
