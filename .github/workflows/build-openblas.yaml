@@ -300,10 +300,9 @@ jobs:
           conda config --set auto_update_conda false
           conda install --yes --quiet clangdev cmake ninja flang=11.0.1
 
-      - name: Update OpenBLAS
+      - name: Clone OpenBLAS
         run: |
-          cd OpenBLAS
-          git pull
+          git clone https://github.com/xianyi/OpenBLAS
 
       - name: Configure CMake
         run: |
