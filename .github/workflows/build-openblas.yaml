@@ -319,12 +319,65 @@ jobs:
         run: |
           echo "C:\msys64\clang64\bin" >> $GITHUB_PATH
 
-      - name: Configure CMake
+      # Taken from OpenBLAS's cmake configuration
+      - name: Compilation cache
+        if: matrix.platform == 'windows-latest'
+        uses: actions/cache@v3
+        with:
+          path: C:/msys64/home/runneradmin/.ccache
+          key: ccache-msys2-CLANG64-Release-${{ github.ref }}-${{ github.sha }}
+          restore-keys: |
+            ccache-msys2-CLANG64-Release-${{ github.ref }}
+            ccache-msys2-CLANG64-Release
+
+      - name: Configure ccache
+        if: matrix.platform == 'windows-latest'
+        run: |
+          which ccache
+          test -d ~/.ccache || mkdir -p ~/.ccache
+          echo "max_size = 250M" > ~/.ccache/ccache.conf
+          echo "compression = true" >> ~/.ccache/ccache.conf
+          ccache -s
+          echo $HOME
+          cygpath -w $HOME
+
+      - name: Configure CMake (Windows Only)
+        if: matrix.platform == 'windows-latest'
         run: |
           cd OpenBLAS
           mkdir build
           cd build
-          cmake .. -DCMAKE_MT=mt -DBUILD_SHARED_LIBS=ON -DBUILD_WITHOUT_LAPACK=no -DNOFORTRAN=1 -DBINARY=64 -DINTERFACE64=1 -DNUM_THREADS=256 -DDYNAMIC_ARCH=ON -DDYNAMIC_LIST='CORE2;NEHALEM;SANDYBRIDGE;BULLDOZER;HASWELL' -DTARGET=NEHALEM -DCMAKE_BUILD_TYPE=Release
+          cmake ..  -DCMAKE_MT=mt \
+                    -DBUILD_SHARED_LIBS=ON \
+                    -DBUILD_WITHOUT_LAPACK=no \
+                    -DNOFORTRAN=1 \
+                    -DBINARY=64 \
+                    -DINTERFACE64=1 \
+                    -DNUM_THREADS=256 \
+                    -DDYNAMIC_ARCH=ON \
+                    -DDYNAMIC_LIST='CORE2;NEHALEM;SANDYBRIDGE;BULLDOZER;HASWELL' \
+                    -DTARGET=NEHALEM \
+                    -DCMAKE_BUILD_TYPE=Release \
+                    -DCMAKE_C_COMPILER_LAUNCHER=ccache \
+                    -DCMAKE_Fortran_COMPILER_LAUNCHER=ccache
+
+      - name: Configure CMake (Linux and OSX Only)
+        if: matrix.platform != 'windows-latest'
+        run: |
+          cd OpenBLAS
+          mkdir build
+          cd build
+          cmake ..  -DCMAKE_MT=mt \
+                    -DBUILD_SHARED_LIBS=ON \
+                    -DBUILD_WITHOUT_LAPACK=no \
+                    -DNOFORTRAN=1 \
+                    -DBINARY=64 \
+                    -DINTERFACE64=1 \
+                    -DNUM_THREADS=256 \
+                    -DDYNAMIC_ARCH=ON \
+                    -DDYNAMIC_LIST='CORE2;NEHALEM;SANDYBRIDGE;BULLDOZER;HASWELL' \
+                    -DTARGET=NEHALEM \
+                    -DCMAKE_BUILD_TYPE=Release
         env:
           CC: ${{ matrix.cc }}
           CXX: ${{ matrix.cxx }}
@@ -356,7 +409,7 @@ jobs:
           git add -A
           git commit -m "Update OpenBLAS on Ubuntu"
           git push origin master
-          
+
       - name: Archive OpenBLAS Build
         uses: actions/upload-artifact@v3
         with:
