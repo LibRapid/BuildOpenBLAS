@@ -253,7 +253,6 @@ jobs:
   compile:
     name: Build OpenBLAS on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
-    shell: ${{ matrix.shell }}
     
     strategy:
       fail-fast: false
@@ -272,7 +271,11 @@ jobs:
           - os: windows-latest
             cc: clang
             cxx: clang++
-            shell: msys2
+            shell: msys2 {0}
+
+    defaults:
+      run:
+        shell: ${{ matrix.shell }}
 
     steps:
       - name: Extract branch name
