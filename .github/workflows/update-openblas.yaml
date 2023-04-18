@@ -24,7 +24,6 @@ jobs:
           git submodule update --init --recursive
 
       - name: Push Changes
-        needs: update-openblas
         continue-on-error: true
         run: |
           git config --global user.name "github-actions[bot]"
