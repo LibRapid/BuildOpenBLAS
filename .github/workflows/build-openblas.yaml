@@ -130,6 +130,15 @@ jobs:
                     -DDYNAMIC_LIST='CORE2;NEHALEM;SANDYBRIDGE;BULLDOZER;HASWELL' \
                     -DTARGET=NEHALEM \
                     -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build OpenBLAS
+        run: |
+          cd OpenBLAS
+          cd build
+          cmake --build . --config Release
+        env:
+          CC: gcc-11
+          CXX: g++-11
       
       - name: Install OpenBLAS
         run: |
@@ -191,15 +200,17 @@ jobs:
           cd OpenBLAS
           mkdir build
           cd build
-          cmake .. -G "Ninja" -DCMAKE_MT=mt \
-                              -DBUILD_SHARED_LIBS=ON \
-                              -DBUILD_WITHOUT_LAPACK=no \
-                              -DNOFORTRAN=0 \
-                              -DNUM_THREADS=256 \
-                              -DDYNAMIC_ARCH=ON \
-                              -DDYNAMIC_LIST='CORE2;NEHALEM;SANDYBRIDGE;BULLDOZER;HASWELL' \
-                              -DTARGET=NEHALEM \
-                              -DCMAKE_BUILD_TYPE=Release
+          cmake ..  -DCMAKE_MT=mt \
+                    -DBUILD_SHARED_LIBS=ON \
+                    -DBUILD_WITHOUT_LAPACK=no \
+                    -DNOFORTRAN=0 \
+                    -DBINARY=64 \
+                    -DINTERFACE64=1 \
+                    -DNUM_THREADS=256 \
+                    -DDYNAMIC_ARCH=ON \
+                    -DDYNAMIC_LIST='CORE2;NEHALEM;SANDYBRIDGE;BULLDOZER;HASWELL' \
+                    -DTARGET=NEHALEM \
+                    -DCMAKE_BUILD_TYPE=Release
 
       - name: Build OpenBLAS
         run: |
@@ -229,3 +240,178 @@ jobs:
         with:
           name: OpenBLAS on windows-latest
           path: openblas-windows-latest
+
+# jobs:
+#   compile:
+#     name: Build OpenBLAS on ${{ matrix.platform }}
+#     runs-on: ${{ matrix.platform }}
+    
+#     strategy:
+#       fail-fast: false
+#       matrix:
+#         include:
+#           - platform: ubuntu-latest
+#             cc: gcc-11
+#             cxx: g++-11
+#             shell: bash
+
+#           - platform: macos-latest
+#             cc: gcc-11
+#             cxx: g++-11
+#             shell: bash
+
+#           - platform: windows-latest
+#             cc: clang
+#             cxx: clang++
+#             shell: msys2 {0}
+
+#     defaults:
+#       run:
+#         shell: ${{ matrix.shell }}
+
+#     steps:
+#       - name: Extract branch name
+#         shell: bash
+#         run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+#         id: extract_branch
+
+#       - name: Checkout Code
+#         uses: actions/checkout@v3
+#         with:
+#           submodules: recursive
+#           ref: ${{ steps.extract_branch.outputs.branch }}
+
+#       # - name: Install Conda Packages
+#       #   if: matrix.platform == 'windows-latest'
+#       #   run: |
+#       #     conda config --add channels conda-forge --force
+#       #     conda config --set auto_update_conda false
+#       #     conda install --yes --quiet clangdev cmake ninja flang=11.0.1
+
+#       - name: Install build dependencies
+#         if: matrix.platform == 'windows-latest'
+#         uses: msys2/setup-msys2@v2
+#         with:
+#           msystem: CLANG64
+#           update: true
+#           release: false  # Use pre-installed version
+#           install: >-
+#             base-devel
+#             mingw-w64-clang-x86_64-cc
+#             mingw-w64-clang-x86_64-cmake
+#             mingw-w64-clang-x86_64-ninja
+#             mingw-w64-clang-x86_64-ccache
+#             mingw-w64-clang-x86_64-flang
+
+#       # - name: Set Up Python
+#       #   uses: actions/setup-python@v4
+#       #   with:
+#       #     python-version: 3.8
+
+#       # - name: Get Latest CMake and Ninja
+#       #   uses: lukka/get-cmake@latest
+
+#       # - name: Setup GNU Fortran
+#       #   uses: modflowpy/install-gfortran-action@v1
+
+#       - name: Add Clang to PATH
+#         if: matrix.platform == 'windows-latest'
+#         run: |
+#           echo "C:\msys64\clang64\bin" >> $GITHUB_PATH
+
+#       # Taken from OpenBLAS's cmake configuration
+#       - name: Compilation cache
+#         if: matrix.platform == 'windows-latest'
+#         uses: actions/cache@v3
+#         with:
+#           path: C:/msys64/home/runneradmin/.ccache
+#           key: ccache-msys2-CLANG64-Release-${{ github.ref }}-${{ github.sha }}
+#           restore-keys: |
+#             ccache-msys2-CLANG64-Release-${{ github.ref }}
+#             ccache-msys2-CLANG64-Release
+
+#       - name: Configure ccache
+#         if: matrix.platform == 'windows-latest'
+#         run: |
+#           which ccache
+#           test -d ~/.ccache || mkdir -p ~/.ccache
+#           echo "max_size = 250M" > ~/.ccache/ccache.conf
+#           echo "compression = true" >> ~/.ccache/ccache.conf
+#           ccache -s
+#           echo $HOME
+#           cygpath -w $HOME
+
+#       - name: Configure CMake (Windows Only)
+#         if: matrix.platform == 'windows-latest'
+#         run: |
+#           cd OpenBLAS
+#           mkdir build
+#           cd build
+#           cmake ..  -DCMAKE_MT=mt \
+#                     -DBUILD_SHARED_LIBS=ON \
+#                     -DBUILD_WITHOUT_LAPACK=no \
+#                     -DNOFORTRAN=0 \
+#                     -DBINARY=64 \
+#                     -DINTERFACE64=1 \
+#                     -DNUM_THREADS=256 \
+#                     -DDYNAMIC_ARCH=ON \
+#                     -DDYNAMIC_LIST='CORE2;NEHALEM;SANDYBRIDGE;BULLDOZER;HASWELL' \
+#                     -DTARGET=NEHALEM \
+#                     -DCMAKE_BUILD_TYPE=Release \
+#                     -DCMAKE_C_COMPILER_LAUNCHER=ccache \
+#                     -DCMAKE_Fortran_COMPILER_LAUNCHER=ccache
+
+#       - name: Configure CMake (Linux and OSX Only)
+#         if: matrix.platform != 'windows-latest'
+#         run: |
+#           cd OpenBLAS
+#           mkdir build
+#           cd build
+#           cmake ..  -DCMAKE_MT=mt \
+#                     -DBUILD_SHARED_LIBS=ON \
+#                     -DBUILD_WITHOUT_LAPACK=no \
+#                     -DNOFORTRAN=0 \
+#                     -DBINARY=64 \
+#                     -DINTERFACE64=1 \
+#                     -DNUM_THREADS=256 \
+#                     -DDYNAMIC_ARCH=ON \
+#                     -DDYNAMIC_LIST='CORE2;NEHALEM;SANDYBRIDGE;BULLDOZER;HASWELL' \
+#                     -DTARGET=NEHALEM \
+#                     -DCMAKE_BUILD_TYPE=Release
+#         env:
+#           CC: ${{ matrix.cc }}
+#           CXX: ${{ matrix.cxx }}
+
+#       - name: Build OpenBLAS
+#         run: |
+#           cd OpenBLAS
+#           cd build
+#           cmake --build . --config Release
+#         env:
+#           CC: ${{ matrix.cc }}
+#           CXX: ${{ matrix.cxx }}
+
+#       - name: Install OpenBLAS
+#         run: |
+#           cd OpenBLAS
+#           cd build
+#           cmake --install . --config Release --prefix ../../openblas-${{ matrix.platform }}
+#         env:
+#           CC: ${{ matrix.cc }}
+#           CXX: ${{ matrix.cxx }}
+
+#       - name: Push Changes
+#         continue-on-error: true
+#         run: |
+#           git config --global user.name "github-actions[bot]"
+#           git config --global user.email "github-actions@users.noreply.github.com"
+#           git pull
+#           git add -A
+#           git commit -m "Update OpenBLAS on Ubuntu"
+#           git push origin master
+
+#       - name: Archive OpenBLAS Build
+#         uses: actions/upload-artifact@v3
+#         with:
+#           name: OpenBLAS on Ubuntu
+#           path: openblas-ubuntu-latest
