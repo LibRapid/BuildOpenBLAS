@@ -51,17 +51,7 @@ jobs:
           cd OpenBLAS
           mkdir build
           cd build
-          cmake ..  -DCMAKE_MT=mt \
-                    -DBUILD_SHARED_LIBS=ON \
-                    -DBUILD_WITHOUT_LAPACK=no \
-                    -DNOFORTRAN=0 \
-                    -DBINARY=64 \
-                    -DINTERFACE64=1 \
-                    -DNUM_THREADS=256 \
-                    -DDYNAMIC_ARCH=ON \
-                    -DDYNAMIC_LIST='CORE2;NEHALEM;SANDYBRIDGE;BULLDOZER;HASWELL' \
-                    -DTARGET=NEHALEM \
-                    -DCMAKE_BUILD_TYPE=Release
+          cmake ..  -DCMAKE_MT=mt -DBUILD_SHARED_LIBS=ON -DBUILD_WITHOUT_LAPACK=no -DNOFORTRAN=0 -DBINARY=64 -DINTERFACE64=1 -DNUM_THREADS=256 -DDYNAMIC_ARCH=ON -DDYNAMIC_LIST='CORE2;NEHALEM;SANDYBRIDGE;BULLDOZER;HASWELL' -DTARGET=NEHALEM -DCMAKE_BUILD_TYPE=Release
 
       - name: Build OpenBLAS
         run: |
@@ -119,17 +109,7 @@ jobs:
           cd OpenBLAS
           mkdir build
           cd build
-          cmake ..  -DCMAKE_MT=mt \
-                    -DBUILD_SHARED_LIBS=ON \
-                    -DBUILD_WITHOUT_LAPACK=no \
-                    -DNOFORTRAN=0 \
-                    -DBINARY=64 \
-                    -DINTERFACE64=1 \
-                    -DNUM_THREADS=256 \
-                    -DDYNAMIC_ARCH=ON \
-                    -DDYNAMIC_LIST='CORE2;NEHALEM;SANDYBRIDGE;BULLDOZER;HASWELL' \
-                    -DTARGET=NEHALEM \
-                    -DCMAKE_BUILD_TYPE=Release
+          cmake ..  -DCMAKE_MT=mt -DBUILD_SHARED_LIBS=ON -DBUILD_WITHOUT_LAPACK=no -DNOFORTRAN=0 -DNUM_THREADS=256 -DDYNAMIC_ARCH=ON -DDYNAMIC_LIST='CORE2;NEHALEM;SANDYBRIDGE;BULLDOZER;HASWELL' -DTARGET=NEHALEM -DCMAKE_BUILD_TYPE=Release
 
       - name: Build OpenBLAS
         run: |
@@ -200,17 +180,7 @@ jobs:
           cd OpenBLAS
           mkdir build
           cd build
-          cmake ..  -DCMAKE_MT=mt \
-                    -DBUILD_SHARED_LIBS=ON \
-                    -DBUILD_WITHOUT_LAPACK=no \
-                    -DNOFORTRAN=0 \
-                    -DBINARY=64 \
-                    -DINTERFACE64=1 \
-                    -DNUM_THREADS=256 \
-                    -DDYNAMIC_ARCH=ON \
-                    -DDYNAMIC_LIST='CORE2;NEHALEM;SANDYBRIDGE;BULLDOZER;HASWELL' \
-                    -DTARGET=NEHALEM \
-                    -DCMAKE_BUILD_TYPE=Release
+          cmake ..  -DCMAKE_MT=mt -DBUILD_SHARED_LIBS=ON -DBUILD_WITHOUT_LAPACK=no -DNOFORTRAN=0 -DBINARY=64 -DINTERFACE64=1 -DNUM_THREADS=256 -DDYNAMIC_ARCH=ON -DDYNAMIC_LIST='CORE2;NEHALEM;SANDYBRIDGE;BULLDOZER;HASWELL' -DTARGET=NEHALEM -DCMAKE_BUILD_TYPE=Release
 
       - name: Build OpenBLAS
         run: |
