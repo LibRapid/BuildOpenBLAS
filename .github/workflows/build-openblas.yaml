@@ -358,7 +358,7 @@ jobs:
           cmake ..  -DCMAKE_MT=mt \
                     -DBUILD_SHARED_LIBS=ON \
                     -DBUILD_WITHOUT_LAPACK=no \
-                    -DNOFORTRAN=1 \
+                    -DNOFORTRAN=0 \
                     -DBINARY=64 \
                     -DINTERFACE64=1 \
                     -DNUM_THREADS=256 \
@@ -378,7 +378,7 @@ jobs:
           cmake ..  -DCMAKE_MT=mt \
                     -DBUILD_SHARED_LIBS=ON \
                     -DBUILD_WITHOUT_LAPACK=no \
-                    -DNOFORTRAN=1 \
+                    -DNOFORTRAN=0 \
                     -DBINARY=64 \
                     -DINTERFACE64=1 \
                     -DNUM_THREADS=256 \
