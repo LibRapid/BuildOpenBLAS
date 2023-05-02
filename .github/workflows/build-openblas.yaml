@@ -124,7 +124,8 @@ jobs:
       - name: Install OpenBLAS
         run: |
           cd OpenBLAS
-          make install PREFIX=../openblas-macos-latest
+          cd build
+          cmake --install . --config Release --prefix ../../openblas-macos-latest
       
       - name: Push Changes
         continue-on-error: true
