@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\dev\librapid_dev\BuildOpenBLAS\OpenBLAS\utest\utest_main.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\dev\librapid_dev\BuildOpenBLAS\OpenBLAS\utest\test_min.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\dev\librapid_dev\BuildOpenBLAS\OpenBLAS\utest\test_amax.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\dev\librapid_dev\BuildOpenBLAS\OpenBLAS\utest\test_ismin.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\dev\librapid_dev\BuildOpenBLAS\OpenBLAS\utest\test_rotmg.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\dev\librapid_dev\BuildOpenBLAS\OpenBLAS\utest\test_rot.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\dev\librapid_dev\BuildOpenBLAS\OpenBLAS\utest\test_axpy.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\dev\librapid_dev\BuildOpenBLAS\OpenBLAS\utest\test_dsdot.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\dev\librapid_dev\BuildOpenBLAS\OpenBLAS\utest\test_dnrm2.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\dev\librapid_dev\BuildOpenBLAS\OpenBLAS\utest\test_swap.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\dev\librapid_dev\BuildOpenBLAS\OpenBLAS\utest\test_potrs.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\dev\librapid_dev\BuildOpenBLAS\OpenBLAS\utest\test_kernel_regress.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\dev\librapid_dev\BuildOpenBLAS\OpenBLAS\utest\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{F58DF837-1BF8-3B8E-BF66-1B2DAAA7619D}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

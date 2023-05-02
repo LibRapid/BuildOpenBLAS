@@ -1,0 +1,10 @@
+#define HEMV
+#define HEMVREV
+#define ASMNAME _chemv_V_HASWELL
+#define ASMFNAME _chemv_V_HASWELL_
+#define NAME chemv_V_HASWELL_
+#define CNAME chemv_V_HASWELL
+#define CHAR_NAME "chemv_V_HASWELL_"
+#define CHAR_CNAME "chemv_V_HASWELL"
+#define COMPLEX
+#include "C:/dev/librapid_dev/BuildOpenBLAS/OpenBLAS/kernel/x86_64/../generic/zhemv_k.c"

@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\dev\librapid_dev\BuildOpenBLAS\build\CMakeFiles\5abe23f93627186f52f33476d769fb6d\INSTALL_force.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{7676EA30-4C22-3783-BAE7-618C686F353F}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
