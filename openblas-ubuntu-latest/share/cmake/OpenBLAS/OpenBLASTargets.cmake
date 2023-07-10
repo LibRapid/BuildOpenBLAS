@@ -56,7 +56,7 @@ if(_IMPORT_PREFIX STREQUAL "/")
 endif()
 
 # Create imported target OpenBLAS::OpenBLAS
-add_library(OpenBLAS::OpenBLAS STATIC IMPORTED)
+add_library(OpenBLAS::OpenBLAS SHARED IMPORTED)
 
 set_target_properties(OpenBLAS::OpenBLAS PROPERTIES
   INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include/openblas"
