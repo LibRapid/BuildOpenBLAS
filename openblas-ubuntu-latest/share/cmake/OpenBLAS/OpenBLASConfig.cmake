@@ -73,7 +73,7 @@ endmacro()
 set(PN OpenBLAS)
 
 # need to check that the @USE_*@ evaluate to something cmake can perform boolean logic upon
-if(1)
+if()
     set(${PN}_openmp_FOUND 1)
 elseif(1)
     set(${PN}_pthread_FOUND 1)
