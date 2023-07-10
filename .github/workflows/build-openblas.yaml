@@ -46,6 +46,7 @@ jobs:
           conda config --set auto_update_conda false
           conda install --yes --quiet clangdev cmake ninja flang=11.0.1
 
+      # -DBUILD_SHARED_LIBS=ON
       - name: Configure CMake
         run: |
           cd OpenBLAS
@@ -109,7 +110,7 @@ jobs:
           cd OpenBLAS
           mkdir build
           cd build
-          cmake ..  -DCMAKE_MT=mt -DBUILD_SHARED_LIBS=ON -DBUILD_WITHOUT_LAPACK=no -DNOFORTRAN=0 -DNUM_THREADS=256 -DDYNAMIC_ARCH=ON -DDYNAMIC_LIST='CORE2;NEHALEM;SANDYBRIDGE;BULLDOZER;HASWELL' -DTARGET=NEHALEM -DCMAKE_BUILD_TYPE=Release
+          cmake ..  -DCMAKE_MT=mt -DBINARY=64 -DBUILD_WITHOUT_LAPACK=no -DNOFORTRAN=0 -DNUM_THREADS=256 -DDYNAMIC_ARCH=ON -DDYNAMIC_LIST='CORE2;NEHALEM;SANDYBRIDGE;BULLDOZER;HASWELL;ZEN' -DTARGET=NEHALEM -DCMAKE_BUILD_TYPE=Release
 
       - name: Build OpenBLAS
         run: |
@@ -123,7 +124,8 @@ jobs:
       - name: Install OpenBLAS
         run: |
           cd OpenBLAS
-          make install PREFIX=../openblas-macos-latest
+          cd build
+          cmake --install . --config Release --prefix ../../openblas-macos-latest
       
       - name: Push Changes
         continue-on-error: true
@@ -180,7 +182,7 @@ jobs:
           cd OpenBLAS
           mkdir build
           cd build
-          cmake .. -G "Ninja" -DCMAKE_MT=mt -DBUILD_SHARED_LIBS=ON -DBUILD_WITHOUT_LAPACK=no -DNOFORTRAN=0 -DBINARY=64 -DNUM_THREADS=256 -DDYNAMIC_ARCH=ON -DDYNAMIC_LIST='CORE2;NEHALEM;SANDYBRIDGE;BULLDOZER;HASWELL' -DTARGET=NEHALEM -DCMAKE_BUILD_TYPE=Release
+          cmake .. -G "Ninja" -DCMAKE_MT=mt -DBUILD_SHARED_LIBS=ON -DBUILD_WITHOUT_LAPACK=no -DNOFORTRAN=0 -DBINARY=64 -DINTERFACE64=1 -DNUM_THREADS=256 -DDYNAMIC_ARCH=ON -DDYNAMIC_LIST='CORE2;NEHALEM;SANDYBRIDGE;BULLDOZER;HASWELL' -DTARGET=NEHALEM -DCMAKE_BUILD_TYPE=Release
         env:
           CC: clang
           CXX: clang

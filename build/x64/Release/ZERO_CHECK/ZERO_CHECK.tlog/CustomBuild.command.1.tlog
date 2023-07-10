@@ -1,0 +1,10 @@
+^C:\DEV\LIBRAPID_DEV\BUILDOPENBLAS\BUILD\CMAKEFILES\D4A4029F8108F096C84A9266439C863F\GENERATE.STAMP.RULE
+setlocal
+C:\opt\CMake\bin\cmake.exe -SC:/dev/librapid_dev/BuildOpenBLAS/OpenBLAS -BC:/dev/librapid_dev/BuildOpenBLAS/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/dev/librapid_dev/BuildOpenBLAS/build/OpenBLAS.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

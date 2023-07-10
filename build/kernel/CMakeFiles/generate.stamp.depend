@@ -1,0 +1,13 @@
+# CMake generation dependency list for this directory.
+C:/dev/librapid_dev/BuildOpenBLAS/OpenBLAS/cmake/arch.cmake
+C:/dev/librapid_dev/BuildOpenBLAS/OpenBLAS/cmake/cc.cmake
+C:/dev/librapid_dev/BuildOpenBLAS/OpenBLAS/cmake/kernel.cmake
+C:/dev/librapid_dev/BuildOpenBLAS/OpenBLAS/cmake/os.cmake
+C:/dev/librapid_dev/BuildOpenBLAS/OpenBLAS/cmake/prebuild.cmake
+C:/dev/librapid_dev/BuildOpenBLAS/OpenBLAS/cmake/system.cmake
+C:/dev/librapid_dev/BuildOpenBLAS/OpenBLAS/cmake/system_check.cmake
+C:/dev/librapid_dev/BuildOpenBLAS/OpenBLAS/getarch.c
+C:/dev/librapid_dev/BuildOpenBLAS/OpenBLAS/getarch_2nd.c
+C:/dev/librapid_dev/BuildOpenBLAS/OpenBLAS/kernel/CMakeLists.txt
+C:/dev/librapid_dev/BuildOpenBLAS/build/config_kernel.h.tmp
+C:/opt/CMake/share/cmake-3.23/Modules/CheckIncludeFile.cmake

@@ -1,0 +1,10 @@
+^C:\DEV\LIBRAPID_DEV\BUILDOPENBLAS\OPENBLAS\CMAKELISTS.TXT
+setlocal
+C:\opt\CMake\bin\cmake.exe -SC:/dev/librapid_dev/BuildOpenBLAS/OpenBLAS -BC:/dev/librapid_dev/BuildOpenBLAS/build --check-stamp-file C:/dev/librapid_dev/BuildOpenBLAS/build/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
