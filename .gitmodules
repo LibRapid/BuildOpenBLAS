@@ -1,4 +1,1 @@
 # OpenBLAS
-[submodule "OpenBLAS"]
-    path = OpenBLAS
-    url = https://github.com/xianyi/OpenBLAS.git
