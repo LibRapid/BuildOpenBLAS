@@ -177,12 +177,62 @@ jobs:
           conda config --set auto_update_conda false
           conda install --yes --quiet clangdev cmake ninja flang=11.0.1
 
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v1.1
+
+      # - name: Configure CMake
+      #   run: |
+      #     cd OpenBLAS
+      #     mkdir build
+      #     cd build
+      #     cmake .. -G "Ninja" -DCMAKE_MT=mt -DBUILD_SHARED_LIBS=ON -DBUILD_WITHOUT_LAPACK=no -DNOFORTRAN=0 -DBINARY=64 -DINTERFACE64=1 -DNUM_THREADS=256 -DDYNAMIC_ARCH=ON -DDYNAMIC_LIST='CORE2;NEHALEM;SANDYBRIDGE;BULLDOZER;HASWELL' -DTARGET=NEHALEM -DCMAKE_BUILD_TYPE=Release
+      #   env:
+      #     CC: clang
+      #     CXX: clang
+
       - name: Configure CMake
         run: |
           cd OpenBLAS
           mkdir build
           cd build
-          cmake .. -G "Ninja" -DCMAKE_MT=mt -DBUILD_SHARED_LIBS=ON -DBUILD_WITHOUT_LAPACK=no -DNOFORTRAN=0 -DBINARY=64 -DINTERFACE64=1 -DNUM_THREADS=256 -DDYNAMIC_ARCH=ON -DDYNAMIC_LIST='CORE2;NEHALEM;SANDYBRIDGE;BULLDOZER;HASWELL' -DTARGET=NEHALEM -DCMAKE_BUILD_TYPE=Release
+
+          $commonArgs = "-DCMAKE_MT=mt -DBUILD_SHARED_LIBS=ON -DBUILD_WITHOUT_LAPACK=no -DNOFORTRAN=0 -DBINARY=64 -DINTERFACE64=1 -DNUM_THREADS=256 -DDYNAMIC_ARCH=ON -DDYNAMIC_LIST='CORE2;NEHALEM;SANDYBRIDGE;BULLDOZER;HASWELL' -DTARGET=NEHALEM -DCMAKE_BUILD_TYPE=Release"
+          $env:CC = "clang"
+          $env:CXX = "clang"
+
+          $vs2022 = $false
+          $vs2019 = $false
+          $ninja = $false
+
+          try {
+            cmake .. -G "Visual Studio 17 2022" $commonArgs
+            $vs2022 = $true
+          } catch {
+            Write-Host "Visual Studio 2022 generator failed."
+          }
+
+          if (-Not $vs2022) {
+            try {
+              cmake .. -G "Visual Studio 16 2019" $commonArgs
+              $vs2019 = $true
+            } catch {
+              Write-Host "Visual Studio 2019 generator failed."
+            }
+          }
+
+          if (-Not $vs2022 -And -Not $vs2019) {
+            try {
+              cmake .. -G "Ninja" $commonArgs
+              $ninja = $true
+            } catch {
+              Write-Host "Ninja generator failed."
+            }
+          }
+
+          if (-Not $vs2022 -And -Not $vs2019 -And -Not $ninja) {
+            Write-Host "All generators failed."
+            exit 1
+          }
         env:
           CC: clang
           CXX: clang
